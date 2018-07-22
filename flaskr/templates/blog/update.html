@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}ویرایش "{{ post['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="title">عنوان</label>
+        <input name="title" id="title" value="{{ request.form['title'] or post['title'] }}" required>
+        <label for="body">بدنه</label>
+
+        <textarea name="body" id="body">{{ request.form['body'] or post['body'] | safe}}</textarea>
+        <script>CKEDITOR.replace( 'body' );</script>
+
+        <label for="visibility">قابل مشاهده برای نویسنده و</label>
+        <select name="visibility" id="visibility">
+            <option value="NULL"
+                    {% if post['visbility'] == 'NULL' %}
+                    selected
+                    {% endif %}
+            >
+                همه (پیش فرض)
+            </option>
+            {% for user in users %}
+            <option value="{{ user['id'] }}"
+                    {% if post['visbility'] == user['id'] %}
+                    selected
+                    {% endif %}
+            >
+                {{ user['username'] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="ذخیره">
+    </form>
+    <hr>
+    <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
+        <input class="danger" type="submit" value="حذف" onclick="return confirm('آیا مطمئن هستید؟');">
+    </form>
+{% endblock %}

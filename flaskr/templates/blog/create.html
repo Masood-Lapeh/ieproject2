@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}پست جدید{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="title">عنوان</label>
+        <input name="title" id="title" value="{{ request.form['title'] }}" required>
+
+        <label for="body">بدنه</label>
+        <textarea name="body" id="body">{{ request.form['body'] | safe}}</textarea>
+        <script>CKEDITOR.replace( 'body' );</script>
+
+        <label for="visibility">قابل مشاهده برای نویسنده و</label>
+        <select name="visibility" id="visibility">
+            <option value="NULL" selected>همه (پیش فرض)</option>
+            {% for user in users %}
+            <option value="{{ user['id'] }}">{{ user['username'] }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="ذخیره">
+    </form>
+{% endblock %}

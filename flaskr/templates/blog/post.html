@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!--<h1>{% block title %}{{ post['title']}}{% endblock %}</h1>-->
+{% endblock %}
+
+{% block content %}
+  <article class="post">
+    <header>
+      <div>
+        <h1>{{ post['title'] }}</h1>
+        <div class="about">توسط {{ post['username'] }} در تاریخ {{ post['created'].strftime('%Y-%m-%d') }}</div>
+      </div>
+      {% if g.user['id'] == post['author_id'] %}
+        <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">ویرایش</a>
+      {% endif %}
+    </header>
+    <div class="body">{{ post['body'] | safe}}</div>
+  </article>
+
+
+
+
+
+    {% for comment in comments %}
+         <hr>
+        <article class="post">
+          <header>
+            <div>
+              <h3>{{ comment['title'] }}</h3>
+              <div class="about">در تاریخ {{ comment['created'].strftime('%Y-%m-%d') }}</div>
+            </div>
+              {% if g.user['id'] == post['author_id'] %}
+                <form action="{{ url_for('blog.deleteComment', id=comment['id']) }}" method="post">
+                    <input class="danger" type="submit" value="حذف نظر" onclick="return confirm('آیا مطمئن هستید؟');">
+                </form>
+              {% endif %}
+          </header>
+          <div class="body">{{ comment['body']}}</div>
+        </article>
+    {% endfor %}
+
+    <hr>
+
+    {% if not comments %}
+        <p class="centered">هنوز هیچ نظری ارسال نشده است.</p>
+    {% endif %}
+
+    <form method="post">
+        <label for="title">عنوان</label>
+        <input name="title" id="title" value="{{ request.form['title'] }}" required>
+
+        <label for="body">نظر شما</label>
+        <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+        <!--<script>CKEDITOR.replace( 'body' );</script>-->
+
+        <input type="submit" value="ثبت نظر">
+    </form>
+
+
+
+{% endblock %}

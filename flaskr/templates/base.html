@@ -1,0 +1,26 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - پروژه مهندسی اینترنت</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link href="https://cdn.rawgit.com/rastikerdar/sahel-font/v1.0.0-alpha20/dist/font-face.css" rel="stylesheet" type="text/css" />
+<script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
+<nav>
+  <h1><a href="{{ url_for('index') }}">پروژه مهندسی اینترنت</a></h1>
+  <ul>
+    {% if g.user %}
+      <li><a href="{{ url_for('auth.changePassword') }}">{{ g.user['username'] }}</a>
+      <li><a href="{{ url_for('auth.logout') }}">خروج</a>
+    {% else %}
+      <li><a href="{{ url_for('auth.register') }}">ثبت نام</a>
+      <li><a href="{{ url_for('auth.login') }}">ورود</a>
+    {% endif %}
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
